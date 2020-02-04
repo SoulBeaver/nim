@@ -1,0 +1,95 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+
+    dependencies {
+        classpath "org.jlleitschuh.gradle:ktlint-gradle:$ktlint_version"
+    }
+}
+
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.3.21'
+    id 'com.github.johnrengelman.shadow' version '5.0.0'
+
+    id 'application'
+}
+
+apply plugin: "jacoco"
+apply plugin: "org.jlleitschuh.gradle.ktlint"
+
+group 'dev.christianbroomfield'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+    jcenter()
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+    maven { url 'https://oss.sonatype.org/content/repositories/releases' }
+}
+
+dependencies {
+    // Kotlin
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+
+    // Http4k
+    implementation "org.http4k:http4k-core:$http4k_version"
+    testImplementation "org.http4k:http4k-testing-hamkrest:$http4k_version"
+    
+    // JSON
+    implementation "com.beust:klaxon:$klaxon_version"
+
+    // Logging
+    implementation "io.github.microutils:kotlin-logging:$kotlin_logging_version"
+    implementation "org.slf4j:slf4j-api:$slf4j_version"
+    implementation "org.apache.logging.log4j:log4j-api:$log4j2_version"
+    implementation "org.apache.logging.log4j:log4j-core:$log4j2_version"
+    implementation "org.apache.logging.log4j:log4j-slf4j-impl:$log4j2_version"
+
+    // Test Library
+    testImplementation "io.kotlintest:kotlintest-runner-junit5:$kotlintest_version"
+    testImplementation "org.junit.jupiter:junit-jupiter-api:$junit5_version"
+    testImplementation "io.mockk:mockk:$mockk_version"
+    testImplementation "com.natpryce:hamkrest:$hamkrest_version"
+    
+    // JUnit Engine
+    testRuntime "org.junit.jupiter:junit-jupiter-engine:$junit5_version"
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+
+tasks.withType(ShadowJar) {
+    baseName = "nim"
+    classifier = ""
+    version = ""
+}
+
+application {
+    mainClassName = "dev.christianbroomfield.nim.MainKt"
+}
+
+jacocoTestReport {
+    // Adjust the output of the test report
+    reports {
+        xml.enabled true
+        csv.enabled false
+    }
+}
+
+test {
+    useJUnitPlatform()
+    jacoco {
+        destinationFile = file("${buildDir}/jacoco/test.exec")
+    }
+}
+
+test.finalizedBy(jacocoTestReport)

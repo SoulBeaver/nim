@@ -1,0 +1,7 @@
+version: '3'
+services:
+  web:
+    build: .
+    image: christianbroomfield/nim
+    ports:
+      - "80:9000"
