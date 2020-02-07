@@ -1,0 +1,38 @@
+{
+  "id": 1,
+
+  "turn": 1,
+  "match_sticks_remaining": 13,
+
+  "game_history": [],
+
+  "actions": [
+    {
+      "type": "TAKE_ONE",
+      "rel": "/nim/1/take",
+      "method": "PUT",
+      "payload": {
+        "turn": 1,
+        "match_sticks_taken": 1
+      }
+    },
+    {
+      "type": "TAKE_TWO",
+      "rel": "/nim/1/take",
+      "method": "PUT",
+      "payload": {
+        "turn": 1,
+        "match_sticks_taken": 2
+      }
+    },
+    {
+      "type": "TAKE_THREE",
+      "rel": "/nim/1/take",
+      "method": "PUT",
+      "payload": {
+        "turn": 1,
+        "match_sticks_taken": 3
+      }
+    }
+  ]
+}
