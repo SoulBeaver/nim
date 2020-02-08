@@ -16,6 +16,13 @@ import org.http4k.lens.string
 import org.http4k.routing.RoutingHttpHandler
 import org.http4k.routing.bind
 
+/*
+ * Dev note: I added UNDO out of convenience and because I didn't like the idea of scrapping and recreating entries
+ * in the MongoDB every time I finished testing a game. It adds a little extra complexity, but overall the changes
+ * weren't excessive as long as I maintained statelessness and immutability, both of which REST and Kotlin idioms
+ * excel at. I also feel more at ease sacrificing some speed because the framework itself is pretty fast and we can
+ * "afford" to lose some CPU cycles copying and lensing.
+ */
 object Undo {
     operator fun invoke(dao: NimGameDao, undoService: UndoService): RoutingHttpHandler {
         val nimGameIdPath = Path.string().of("id")
@@ -24,13 +31,15 @@ object Undo {
         val undo: HttpHandler = { request ->
             val id = nimGameIdPath(request)
 
-            val undoneDao = dao.get(id)?.let {
+            val undoneGame = dao.get(id)?.let {
                 undoService.undo(it)
             }?.also {
+                // Dev note:  this is just some opinionated stuff, but I like it when the side effect
+                // is clearly separated from the rest of the code.
                 dao.update(id, it)
             }
 
-            undoneDao?.let {
+            undoneGame?.let {
                 Response(Status.OK).with(nimGameMsgLens of it.toMessage())
             } ?: Response(Status.NOT_FOUND)
         }

@@ -26,7 +26,7 @@ class Skynet(private val random: Random = Random.Default) : Ai {
         // Eh, can't really win anymore here
         matchSticksRemaining == 5 -> 1
 
-        // Delay as long as possible out of spite :)
+        // Delay as long as possible out of spite
         matchSticksRemaining in 2..4 -> matchSticksRemaining - 1
 
         // Lose gracefully

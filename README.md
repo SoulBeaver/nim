@@ -36,6 +36,9 @@ Alle Endpunkte können auch in der Datei `requests.http` mit einem lokal laufend
 - Http4k
 - MongoDB
 
+Ihr braucht eine aktive MongoDB Instanz, um das Program laufen zu lassen. Port und Host können in der
+NimConfiguration angepasst werden. 
+
 ## Developer Thoughts
 
 Hier kommen meine Gedanken zum Design und technischen Umsetzung des Projekts.
@@ -50,7 +53,7 @@ Nicht alles hat zu 100% geklappt und ich musste mich erst noch in die Library hi
 umgehe und mich darin produktiv gestalte.
 
 Außerdem ist http4k ziemlich schnell. Klar, Performance muss nicht unbedingt das höchste Kriterium sein, aber
-Serverkosten zu sparen ist nicht zu unterschätzen, vorallem wenn es nicht signifikant mehr Aufwand und Expertise verbinden ist. Und Spring Boot ist schon *echt* langsam. 
+Serverkosten zu sparen ist nicht zu unterschätzen, vorallem wenn es nicht signifikant mehr Aufwand und Expertise bedeutet. 
 
 ### Wieso MongoDB statt *SQL?
 
@@ -83,7 +86,8 @@ bis der Write fertig ist. Für diese Aufgabe finde ich die Lösung okay.
 wird leise behandelt oder als 400 zurückgegeben. Es gibt keinen Grund, erwartetes Fehlverhalten als Exceptions zu behandeln.
 - Logging. Metriken fehlen, ja, aber das wichtigste an Microservices sind tracing, logging und metrics. Tracing und Metrics war in diesem Projekt nicht die Arbeit
 wert, aber Logging auf jeden Fall. Ist auch einfach mit einzufügen, sonst würde ich http4k gar nicht erst empfehlen.
-- OpenAPI. Eine Swagger Doku ist ziemlich cool.
+- OpenAPI. Habe ich hier explitiz nicht mit eingeführt, weil die requests.http in diesem Fall meine Swagger Doku ist. Im Normalfall
+sollte sie natürlich nicht fehlen.
 - Healthchecks. Gibt nur einen, aber der reicht erstmal. 
 
 Es ist nicht wirklich ein Edge-Case, aber Dokumentation Englisch-Deutsch ist immer so eine Sache. Ich bevorzuge es, wenn
@@ -97,7 +101,7 @@ Andere Microservice-Patterns wie:
 - Bulkheads
 - Retrys
 
-End-to-End tests wären noch sinnvoll und meine Code Coverage will irgendwie nicht so, wie ich will.
+End-to-End tests wären noch sinnvoll!
 
 In diesem Fall waren die einfach nicht notwendig. Wir kommunizieren mit keinen anderen Services
 und ich gehe stark davon aus, dass ihr mir keine Load Tests reinjagt, um meinen Service zu überfordern :D

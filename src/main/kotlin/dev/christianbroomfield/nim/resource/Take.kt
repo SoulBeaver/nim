@@ -21,6 +21,13 @@ import org.http4k.routing.bind
 
 private val log = KotlinLogging.logger {}
 
+/*
+ * Dev note: this performs the core game loop between Human and PC. You can try it out in the requests.http!
+ *
+ * You might disagree with my decision to keep the DAO on the top level. A frequent argument I hear is that you should
+ * keep business and database logic separate from the REST layer. And while yes generally I'd agree, it's a lot easier
+ * to test if the business logic is separate from the database logic.
+ */
 object Take {
     operator fun invoke(dao: NimGameDao, nimGameService: NimGameService): RoutingHttpHandler {
         val nimGameIdPath = Path.string().of("id")

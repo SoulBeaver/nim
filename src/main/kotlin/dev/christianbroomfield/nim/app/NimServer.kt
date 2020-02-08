@@ -18,6 +18,9 @@ import mu.KotlinLogging
 import org.http4k.core.Filter
 import org.http4k.core.HttpHandler
 import org.http4k.core.HttpTransaction
+import org.http4k.core.Method
+import org.http4k.core.Response
+import org.http4k.core.Status.Companion.OK
 import org.http4k.core.then
 import org.http4k.filter.DebuggingFilters
 import org.http4k.filter.ResponseFilters
@@ -60,6 +63,8 @@ object NimServer {
 
         return assembleFilters().then(
             routes(
+                "/healthcheck" bind Method.GET to { Response(OK).body("ping") },
+
                 "/nim" bind routes(
                     getAllHandler,
                     getActiveHandler,
