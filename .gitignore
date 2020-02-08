@@ -33,3 +33,5 @@ build/
 
 # IntelliJ Project files
 .idea/
+
+out/
