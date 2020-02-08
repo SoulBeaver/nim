@@ -5,6 +5,8 @@ import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import dev.christianbroomfield.nim.model.Player
+import dev.christianbroomfield.nim.resource.message.NimGameMessage
+import dev.christianbroomfield.nim.resource.message.NimGameTurnMessage
 import dev.christianbroomfield.nim.util.fixture
 import io.kotlintest.specs.DescribeSpec
 

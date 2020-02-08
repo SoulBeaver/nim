@@ -1,9 +1,9 @@
 package dev.christianbroomfield.nim.resource
 
 import dev.christianbroomfield.nim.dao.NimGameDao
-import dev.christianbroomfield.nim.unit.message.NimGameMessage
-import dev.christianbroomfield.nim.unit.message.toMessage
-import dev.christianbroomfield.nim.unit.message.toModel
+import dev.christianbroomfield.nim.resource.message.NimGameMessage
+import dev.christianbroomfield.nim.resource.message.toMessage
+import dev.christianbroomfield.nim.resource.message.toModel
 import org.http4k.core.Body
 import org.http4k.core.HttpHandler
 import org.http4k.core.Method

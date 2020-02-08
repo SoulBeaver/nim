@@ -7,7 +7,12 @@ import dev.christianbroomfield.nim.resource.GetActive
 import dev.christianbroomfield.nim.resource.GetAll
 import dev.christianbroomfield.nim.resource.GetById
 import dev.christianbroomfield.nim.resource.GetCompleted
+import dev.christianbroomfield.nim.resource.Take
+import dev.christianbroomfield.nim.resource.Undo
 import dev.christianbroomfield.nim.resource.Update
+import dev.christianbroomfield.nim.service.NimGameTurnService
+import dev.christianbroomfield.nim.service.Skynet
+import dev.christianbroomfield.nim.service.UndoService
 import mu.KotlinLogging
 import org.http4k.core.Filter
 import org.http4k.core.HttpHandler
@@ -49,6 +54,9 @@ object NimServer {
         val updateHandler = Update(nimGameDao)
         val deleteHandler = Delete(nimGameDao)
 
+        val takeHandler = Take(nimGameDao, Skynet(), NimGameTurnService())
+        val undoHandler = Undo(nimGameDao, UndoService())
+
         return assembleFilters().then(
             routes(
                 "/nim" bind routes(
@@ -58,20 +66,20 @@ object NimServer {
                     getByIdHandler,
                     createHandler,
                     updateHandler,
-                    deleteHandler
+                    deleteHandler,
+                    takeHandler,
+                    undoHandler
                 )
             )
         )
     }
 
     private fun assembleFilters(): Filter {
-        val filter = DebuggingFilters
+        return DebuggingFilters
             .PrintRequestAndResponse()
-            .then(ServerFilters.CatchLensFailure)
-
-        return filter
             .then(ResponseFilters.ReportHttpTransaction { tx: HttpTransaction ->
                 log.info { "${tx.request.uri} ${tx.response.status}; took ${tx.duration.toMillis()}ms" }
             })
+            .then(ServerFilters.CatchLensFailure)
     }
 }

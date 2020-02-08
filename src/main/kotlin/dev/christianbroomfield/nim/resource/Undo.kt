@@ -1,6 +1,7 @@
 package dev.christianbroomfield.nim.resource
 
 import dev.christianbroomfield.nim.dao.NimGameDao
+import dev.christianbroomfield.nim.service.UndoService
 import dev.christianbroomfield.nim.resource.message.NimGameMessage
 import dev.christianbroomfield.nim.resource.message.toMessage
 import org.http4k.core.Body
@@ -15,19 +16,25 @@ import org.http4k.lens.string
 import org.http4k.routing.RoutingHttpHandler
 import org.http4k.routing.bind
 
-object GetById {
-    operator fun invoke(dao: NimGameDao): RoutingHttpHandler {
+object Undo {
+    operator fun invoke(dao: NimGameDao, undoService: UndoService): RoutingHttpHandler {
         val nimGameIdPath = Path.string().of("id")
-        val nimGameLens = Body.auto<NimGameMessage>().toLens()
+        val nimGameMsgLens = Body.auto<NimGameMessage>().toLens()
 
-        val getById: HttpHandler = { request ->
+        val undo: HttpHandler = { request ->
             val id = nimGameIdPath(request)
 
-            dao.get(id)?.let {
-                Response(Status.OK).with(nimGameLens of it.toMessage())
+            val undoneDao = dao.get(id)?.let {
+                undoService.undo(it)
+            }?.also {
+                dao.update(id, it)
+            }
+
+            undoneDao?.let {
+                Response(Status.OK).with(nimGameMsgLens of it.toMessage())
             } ?: Response(Status.NOT_FOUND)
         }
 
-        return "/{id:.*}" bind Method.GET to getById
+        return "/{id:.*}/undo" bind Method.POST to undo
     }
 }

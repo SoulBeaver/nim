@@ -5,8 +5,8 @@ import dev.christianbroomfield.nim.app.NimConfiguration
 import dev.christianbroomfield.nim.app.NimServer
 import dev.christianbroomfield.nim.model.NimGame
 import dev.christianbroomfield.nim.model.Player
-import dev.christianbroomfield.nim.unit.message.NimGameMessage
-import dev.christianbroomfield.nim.unit.message.toMessage
+import dev.christianbroomfield.nim.resource.message.NimGameMessage
+import dev.christianbroomfield.nim.resource.message.toMessage
 import dev.christianbroomfield.nim.util.EmbeddedMongoDB
 import io.kotlintest.TestCase
 import io.kotlintest.TestResult
@@ -152,7 +152,11 @@ class ServerIntegrationTest : DescribeSpec() {
             }
 
             it("should return the updated game") {
-                val expected = NimGameMessage(turn = 3, matchSticksRemaining = 5, gameHistory = emptyList())
+                val expected = NimGameMessage(
+                    turn = 3,
+                    matchSticksRemaining = 5,
+                    gameHistory = emptyList()
+                )
                 val response = nimServer(Request(Method.PUT, "/nim/${game.id}")
                     .with(lens of expected))
 

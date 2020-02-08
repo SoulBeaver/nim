@@ -25,8 +25,8 @@ Alle Endpunkte können auch in der Datei `requests.http` mit einem lokal laufend
 |GET|/nim/completed|Get all completed Nim games
 |GET|/nim/active|Get all active Nim games
 |POST|/nim|Create new Nim game
-|PUT|/nim/:id/take|Take matchsticks from active Nim game
-|PUT|/nim/:id/undo|Undo the current turn
+|POST|/nim/:id/take|Take matchsticks from active Nim game
+|POST|/nim/:id/undo|Undo the current turn
 |PUT|/nim/:id|Set the Nim game to a different state
 |DELETE|/nim/:id|Delete the Nim game for the given id if it exists
 
