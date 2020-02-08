@@ -38,7 +38,7 @@ class EmbeddedMongoDB : TestListener {
     }
 
     override fun afterSpecClass(spec: Spec, results: Map<TestCase, TestResult>) {
-        mongoClient!!.dropDatabase("tables")
+        mongoClient!!.dropDatabase("nimGames")
 
         this.mongod.stop()
         this.mongodExecutable.stop()

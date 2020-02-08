@@ -4,3 +4,49 @@
 # * 'gtrp' and 'gtr' create a GET request with or without query parameters;
 # * 'ptr' and 'ptrp' create a POST request with a simple or parameter-like body;
 # * 'mptr' and 'fptr' create a POST request to submit a form with a text or file field (multipart/form-data);
+
+### When you POST /nim, you will receive the Location header with an ID that you can use
+### to query all the other endpoints that require an ID.
+
+### Get all Nim games
+
+GET http://localhost:8080/nim
+Accept: application/json
+
+### Get a specific Nim game by id
+
+GET http://localhost:8080/nim/:id
+Accept: application/json
+
+### Get all completed Nim games
+
+GET http://localhost:8080/nim/completed
+Accept: application/json
+
+### Get all active Nim games
+
+GET http://localhost:8080/nim/active
+Accept: application/json
+
+### Create a new Nim game
+
+POST http://localhost:8080/nim
+Accept: application/json
+
+### Update an existing Nim game
+
+PUT http://localhost:8080/nim/:id
+Content-Type: application/json
+Accept: application/json
+
+{
+  "turn": 3,
+  "match_sticks_remaining": 5,
+  "game_history": []
+}
+
+### Delete an Nim game
+
+DELETE http://localhost:8080/nim/
+
+###

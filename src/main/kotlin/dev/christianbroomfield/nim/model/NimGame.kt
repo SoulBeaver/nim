@@ -1,20 +1,25 @@
 package dev.christianbroomfield.nim.model
 
-import com.fasterxml.jackson.annotation.JsonInclude
-import com.fasterxml.jackson.annotation.JsonProperty
+import org.bson.codecs.pojo.annotations.BsonId
+import org.litote.kmongo.Id
+import org.litote.kmongo.newId
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
 data class NimGame(
-    val id: Int,
+    @BsonId
+    val id: Id<NimGame> = newId(),
 
     val turn: Int,
     val winner: Player? = null,
 
-    @JsonProperty("match_sticks_remaining")
     val matchSticksRemaining: Int,
 
-    @JsonProperty("game_history")
-    val gameHistory: List<NimGameTurn>,
-
-    val actions: List<NimGameAction>
-)
+    val gameHistory: List<NimGameTurn>
+) {
+    companion object {
+        fun new() = NimGame(
+            turn = 1,
+            matchSticksRemaining = 13,
+            gameHistory = emptyList()
+        )
+    }
+}

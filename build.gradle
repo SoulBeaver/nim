@@ -42,6 +42,7 @@ dependencies {
     implementation "org.http4k:http4k-format-jackson:$http4k_version"
     implementation "org.http4k:http4k-client-okhttp:$http4k_version"
     testImplementation "org.http4k:http4k-testing-hamkrest:$http4k_version"
+    testImplementation "org.http4k:http4k-testing-approval:$http4k_version"
     
     // JSON
     implementation "com.beust:klaxon:$klaxon_version"
@@ -64,6 +65,7 @@ dependencies {
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junit5_version"
     testImplementation "io.mockk:mockk:$mockk_version"
     testImplementation "com.natpryce:hamkrest:$hamkrest_version"
+    testImplementation "org.amshove.kluent:kluent:$kluent_version"
     
     // JUnit Engine
     testRuntime "org.junit.jupiter:junit-jupiter-engine:$junit5_version"

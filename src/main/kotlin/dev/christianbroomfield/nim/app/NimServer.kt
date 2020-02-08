@@ -1,7 +1,13 @@
 package dev.christianbroomfield.nim.app
 
 import dev.christianbroomfield.nim.dao.NimGameDao
-import dev.christianbroomfield.nim.resource.NimResource
+import dev.christianbroomfield.nim.resource.Create
+import dev.christianbroomfield.nim.resource.Delete
+import dev.christianbroomfield.nim.resource.GetActive
+import dev.christianbroomfield.nim.resource.GetAll
+import dev.christianbroomfield.nim.resource.GetById
+import dev.christianbroomfield.nim.resource.GetCompleted
+import dev.christianbroomfield.nim.resource.Update
 import mu.KotlinLogging
 import org.http4k.core.Filter
 import org.http4k.core.HttpHandler
@@ -10,22 +16,40 @@ import org.http4k.core.then
 import org.http4k.filter.DebuggingFilters
 import org.http4k.filter.ResponseFilters
 import org.http4k.filter.ServerFilters
+import org.http4k.format.Jackson
 import org.http4k.routing.bind
 import org.http4k.routing.routes
 import org.litote.kmongo.KMongo
+import org.litote.kmongo.id.jackson.IdJacksonModule
 
 private val log = KotlinLogging.logger {}
 
 object NimServer {
-    operator fun invoke(): HttpHandler {
-        val mongodb = KMongo.createClient("127.0.0.1", 27017)
+    operator fun invoke(configuration: NimConfiguration): HttpHandler {
+        Jackson.mapper.registerModule(IdJacksonModule())
 
-        val nimGameDao = NimGameDao(mongodb)
-        val nimResource = NimResource(nimGameDao)
+        val nimGameDao = NimGameDao(KMongo.createClient(configuration.mongo.host, configuration.mongo.port))
+
+        val getAllHandler = GetAll(nimGameDao)
+        val getActiveHandler = GetActive(nimGameDao)
+        val getCompletedHandler = GetCompleted(nimGameDao)
+        val getByIdHandler = GetById(nimGameDao)
+
+        val createHandler = Create(nimGameDao)
+        val updateHandler = Update(nimGameDao)
+        val deleteHandler = Delete(nimGameDao)
 
         return assembleFilters().then(
             routes(
-                "/" bind nimResource()
+                "/nim" bind routes(
+                    getAllHandler,
+                    getActiveHandler,
+                    getCompletedHandler,
+                    getByIdHandler,
+                    createHandler,
+                    updateHandler,
+                    deleteHandler
+                )
             )
         )
     }
