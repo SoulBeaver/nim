@@ -30,6 +30,16 @@ object NimServer {
 
         val nimGameDao = NimGameDao(KMongo.createClient(configuration.mongo.host, configuration.mongo.port))
 
+        /**
+         * Dev note:  the way of doing things in Http4k is to keep every handler, a type of closure,
+         * as slim as possible to avoid complicating the code. So while it makes sense to create a CRUD
+         * class in Spring, here it's not considered best practice. Lenses are lightweight and easy to
+         * create, so it's not considered harmful to duplicate Lenses if the same model is used in multiple
+         * REST handlers.
+         *
+         * The added benefit is that you can test every handler in isolation. This wasn't done for these specific
+         * handlers because the code is really *that* small that it could be handled in the integration test.
+         */
         val getAllHandler = GetAll(nimGameDao)
         val getActiveHandler = GetActive(nimGameDao)
         val getCompletedHandler = GetCompleted(nimGameDao)

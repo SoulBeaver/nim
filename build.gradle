@@ -64,7 +64,6 @@ dependencies {
     testImplementation "io.kotlintest:kotlintest-runner-junit5:$kotlintest_version"
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junit5_version"
     testImplementation "io.mockk:mockk:$mockk_version"
-    testImplementation "com.natpryce:hamkrest:$hamkrest_version"
     testImplementation "org.amshove.kluent:kluent:$kluent_version"
     
     // JUnit Engine

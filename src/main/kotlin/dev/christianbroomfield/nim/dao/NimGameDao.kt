@@ -46,7 +46,7 @@ class NimGameDao(private val client: MongoClient) {
         nimGameCollection.insertOne(nimGame)
 
         return nimGame.also {
-            log.info { "inserted table: $it" }
+            log.debug { "inserted table: $it" }
         }
     }
 
