@@ -1,5 +1,7 @@
 # Nim
 
+[![codecov](https://codecov.io/gh/SoulBeaver/nim/branch/master/graph/badge.svg?token=tQkCabXP3F)](https://codecov.io/gh/SoulBeaver/nim)
+
 ## Das Spiel
 
 Das Nim-Spiel ist ein Spiel für 2 Personen. Gegeben ist ein Haufen von 13 Streichhölzern, von dem beide Spieler abwechselnd entweder 1, 2 oder 3 Streichhölzer ziehen müssen. 
