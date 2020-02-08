@@ -1,4 +1,4 @@
-package dev.christianbroomfield.nim.unit.message
+package dev.christianbroomfield.nim.resource.message
 
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty

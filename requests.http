@@ -15,7 +15,7 @@ Accept: application/json
 
 ### Get a specific Nim game by id
 
-GET http://localhost:8080/nim/:id
+GET http://localhost:8080/nim/id
 Accept: application/json
 
 ### Get all completed Nim games
@@ -35,7 +35,7 @@ Accept: application/json
 
 ### Update an existing Nim game
 
-PUT http://localhost:8080/nim/:id
+PUT http://localhost:8080/nim/id
 Content-Type: application/json
 Accept: application/json
 
@@ -47,6 +47,48 @@ Accept: application/json
 
 ### Delete an Nim game
 
-DELETE http://localhost:8080/nim/
+DELETE http://localhost:8080/nim/id
+
+### This is the core gameplay loop:
+### 1. POST /nim/:id/take to select one, two or three match sticks to take
+### 2. The AI will perform its turn as part of the response
+### 3. Receive an updated state of the Nim game
+### If you aren't happy with your turn, you may use POST /nim/:id/undo to undo your turn
+
+### Take 1
+
+POST http://localhost:8080/nim/id/take
+Content-Type: application/json
+Accept: application/json
+
+{
+  "match_sticks_taken": 1
+}
+
+### Take 2
+
+POST http://localhost:8080/nim/id/take
+Content-Type: application/json
+Accept: application/json
+
+{
+  "match_sticks_taken": 2
+}
+
+### Take 3
+
+POST http://localhost:8080/nim/id/take
+Content-Type: application/json
+Accept: application/json
+
+{
+  "match_sticks_taken": 3
+}
+
+### Undo turn
+
+POST http://localhost:8080/nim/id/undo
+Content-Type: application/json
+Accept: application/json
 
 ###

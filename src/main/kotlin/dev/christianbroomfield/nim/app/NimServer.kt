@@ -7,11 +7,20 @@ import dev.christianbroomfield.nim.resource.GetActive
 import dev.christianbroomfield.nim.resource.GetAll
 import dev.christianbroomfield.nim.resource.GetById
 import dev.christianbroomfield.nim.resource.GetCompleted
+import dev.christianbroomfield.nim.resource.Take
+import dev.christianbroomfield.nim.resource.Undo
 import dev.christianbroomfield.nim.resource.Update
+import dev.christianbroomfield.nim.service.NimGameService
+import dev.christianbroomfield.nim.service.NimGameTurnService
+import dev.christianbroomfield.nim.service.Skynet
+import dev.christianbroomfield.nim.service.UndoService
 import mu.KotlinLogging
 import org.http4k.core.Filter
 import org.http4k.core.HttpHandler
 import org.http4k.core.HttpTransaction
+import org.http4k.core.Method
+import org.http4k.core.Response
+import org.http4k.core.Status.Companion.OK
 import org.http4k.core.then
 import org.http4k.filter.DebuggingFilters
 import org.http4k.filter.ResponseFilters
@@ -49,8 +58,13 @@ object NimServer {
         val updateHandler = Update(nimGameDao)
         val deleteHandler = Delete(nimGameDao)
 
-        return assembleFilters().then(
+        val takeHandler = Take(nimGameDao, NimGameService(NimGameTurnService(), Skynet()))
+        val undoHandler = Undo(nimGameDao, UndoService())
+
+        return assembleFilters(configuration).then(
             routes(
+                "/healthcheck" bind Method.GET to { Response(OK).body("ping") },
+
                 "/nim" bind routes(
                     getAllHandler,
                     getActiveHandler,
@@ -58,16 +72,22 @@ object NimServer {
                     getByIdHandler,
                     createHandler,
                     updateHandler,
-                    deleteHandler
+                    deleteHandler,
+                    takeHandler,
+                    undoHandler
                 )
             )
         )
     }
 
-    private fun assembleFilters(): Filter {
-        val filter = DebuggingFilters
-            .PrintRequestAndResponse()
-            .then(ServerFilters.CatchLensFailure)
+    private fun assembleFilters(config: NimConfiguration): Filter {
+        val filter = when {
+            config.debug -> DebuggingFilters
+                .PrintRequestAndResponse()
+                .then(ServerFilters.CatchLensFailure)
+
+            else -> ServerFilters.CatchLensFailure
+        }
 
         return filter
             .then(ResponseFilters.ReportHttpTransaction { tx: HttpTransaction ->
