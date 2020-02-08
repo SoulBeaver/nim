@@ -7,6 +7,12 @@ import org.litote.kmongo.newId
 
 private val log = KotlinLogging.logger {}
 
+const val MAX_MATCHSTICKS = 13
+const val MIN_MATCHSTICKS = 0
+
+const val MAX_MATCHSTICKS_TO_TAKE = 3
+const val MIN_MATCHSTICKS_TO_TAKE = 1
+
 data class NimGame(
     @BsonId
     val id: Id<NimGame> = newId(),
@@ -31,16 +37,16 @@ data class NimGame(
             throw IllegalArgumentException("Attempted to write a negative turn value; $turn")
         }
 
-        if (matchSticksRemaining < 0 || matchSticksRemaining > 13) {
-            log.warn { "MatchSticksRemaining not in allowed range [0..13]; $matchSticksRemaining" }
-            throw IllegalArgumentException("MatchSticksRemaining not in allowed range [0..13]; $matchSticksRemaining")
+        if (matchSticksRemaining !in MIN_MATCHSTICKS..MAX_MATCHSTICKS) {
+            log.warn { "MatchSticksRemaining not in allowed range [$MIN_MATCHSTICKS..$MAX_MATCHSTICKS]; $matchSticksRemaining" }
+            throw IllegalArgumentException("MatchSticksRemaining not in allowed range [$MIN_MATCHSTICKS..$MAX_MATCHSTICKS]; $matchSticksRemaining")
         }
     }
 
     companion object {
         fun new() = NimGame(
             turn = 1,
-            matchSticksRemaining = 13,
+            matchSticksRemaining = MAX_MATCHSTICKS,
             gameHistory = emptyList()
         )
     }

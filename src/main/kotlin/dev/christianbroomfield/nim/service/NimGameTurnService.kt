@@ -1,5 +1,7 @@
 package dev.christianbroomfield.nim.service
 
+import dev.christianbroomfield.nim.model.MAX_MATCHSTICKS_TO_TAKE
+import dev.christianbroomfield.nim.model.MIN_MATCHSTICKS_TO_TAKE
 import dev.christianbroomfield.nim.model.NimGame
 import dev.christianbroomfield.nim.model.NimGameTurn
 import dev.christianbroomfield.nim.model.Player
@@ -8,11 +10,11 @@ import mu.KotlinLogging
 private val log = KotlinLogging.logger {}
 
 class NimGameTurnService {
-    fun take(nimGame: NimGame, playerAction: (NimGame) -> (NimGameTurnResult)): NimGame {
+    fun take(nimGame: NimGame, playerAction: (NimGame) -> (PlayerTurnResult)): NimGame {
         val turnResult = playerAction(nimGame)
 
-        require(turnResult.matchSticksTaken in 1..3) {
-            "Every turn has to result in 1..3 match sticks taken!"
+        require(turnResult.matchSticksTaken in MIN_MATCHSTICKS_TO_TAKE..MAX_MATCHSTICKS_TO_TAKE) {
+            "Every turn has to result in $MIN_MATCHSTICKS_TO_TAKE..$MAX_MATCHSTICKS_TO_TAKE match sticks taken!"
         }
 
         val matchSticksRemaining = nimGame.matchSticksRemaining - turnResult.matchSticksTaken
@@ -31,7 +33,7 @@ class NimGameTurnService {
     }
 }
 
-data class NimGameTurnResult(
+data class PlayerTurnResult(
     val player: Player,
     val matchSticksTaken: Int
 )

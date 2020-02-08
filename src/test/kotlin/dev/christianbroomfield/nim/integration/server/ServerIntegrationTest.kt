@@ -6,6 +6,8 @@ import dev.christianbroomfield.nim.app.NimServer
 import dev.christianbroomfield.nim.model.NimGame
 import dev.christianbroomfield.nim.model.Player
 import dev.christianbroomfield.nim.resource.message.NimGameMessage
+import dev.christianbroomfield.nim.resource.message.NimGameTurnMessage
+import dev.christianbroomfield.nim.resource.message.NimTakeMessage
 import dev.christianbroomfield.nim.resource.message.toMessage
 import dev.christianbroomfield.nim.util.EmbeddedMongoDB
 import io.kotlintest.TestCase
@@ -162,6 +164,68 @@ class ServerIntegrationTest : DescribeSpec() {
 
                 response.status shouldBe OK
                 lens(response) shouldBeEqualTo expected
+            }
+        }
+
+        describe("playing a game") {
+            val gameLens = Body1.auto<NimGameMessage>().toLens()
+            val takeLens = Body1.auto<NimTakeMessage>().toLens()
+
+            val game = NimGame.new().also {
+                collection().insertOne(it)
+            }
+
+            it("should update the game based on the Human and AI turns") {
+                val response = nimServer(Request(Method.POST, "/nim/${game.id}/take")
+                    .with(takeLens of NimTakeMessage(3)))
+
+                response.status shouldBe OK
+
+                val game = gameLens(response)
+                game.turn shouldBeEqualTo 3
+                // we introduced some randomness with the AI being able to take 1..3 match sticks
+                // a clean test would account for this and even do property-based testing to exhaust multiple games at once
+                game.gameHistory[1] shouldBeEqualTo NimGameTurnMessage(
+                    turn = 1,
+                    player = "HUMAN",
+                    matchSticksRemaining = 13,
+                    matchSticksTaken = 3
+                )
+            }
+        }
+
+        describe("undoing a fresh game") {
+            val gameLens = Body1.auto<NimGameMessage>().toLens()
+
+            val expected = NimGame.new().also {
+                collection().insertOne(it)
+            }
+
+            it("returns the same game without an issue") {
+                val response = nimServer(Request(Method.POST, "/nim/${expected.id}/undo"))
+                response.status shouldBe OK
+
+                gameLens(response) shouldBeEqualTo expected.toMessage()
+            }
+        }
+
+        describe("undoing a game after one human turn (two turns total)") {
+            val gameLens = Body1.auto<NimGameMessage>().toLens()
+            val takeLens = Body1.auto<NimTakeMessage>().toLens()
+
+            val expected = NimGame.new().also {
+                collection().insertOne(it)
+            }
+
+            // perform a game turn
+            nimServer(Request(Method.POST, "/nim/${expected.id}/take")
+                .with(takeLens of NimTakeMessage(3)))
+
+            it("reverts the game back to its fresh state") {
+                val response = nimServer(Request(Method.POST, "/nim/${expected.id}/undo"))
+                response.status shouldBe OK
+
+                gameLens(response) shouldBeEqualTo expected.toMessage()
             }
         }
     }

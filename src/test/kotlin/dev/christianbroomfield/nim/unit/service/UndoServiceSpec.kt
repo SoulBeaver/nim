@@ -7,7 +7,7 @@ import dev.christianbroomfield.nim.service.UndoService
 import io.kotlintest.specs.DescribeSpec
 import org.amshove.kluent.shouldBeEqualTo
 
-class UndoServiceSpec: DescribeSpec() {
+class UndoServiceSpec : DescribeSpec() {
     private val undoService = UndoService()
 
     init {
@@ -17,7 +17,7 @@ class UndoServiceSpec: DescribeSpec() {
             it("can't undo the first turn") {
                 val undoneNimGame = undoService.undo(nimGame)
 
-                undoneNimGame shouldBeEqualTo NimGame.new().copy(id=nimGame.id) // need the id for equality
+                undoneNimGame shouldBeEqualTo NimGame.new().copy(id = nimGame.id) // need the id for equality
             }
         }
 
@@ -57,9 +57,10 @@ class UndoServiceSpec: DescribeSpec() {
             it("reverts back one turn") {
                 val expected = NimGame(
                     id = nimGame.id,
-                    turn = 4,
-                    matchSticksRemaining = 4,
+                    turn = 5,
+                    matchSticksRemaining = 1,
                     gameHistory = listOf(
+                        NimGameTurn(turn = 4, matchSticksRemaining = 4, matchSticksTaken = 3, player = Player.AI),
                         NimGameTurn(turn = 3, matchSticksRemaining = 7, matchSticksTaken = 3, player = Player.HUMAN),
                         NimGameTurn(turn = 2, matchSticksRemaining = 10, matchSticksTaken = 3, player = Player.AI),
                         NimGameTurn(turn = 1, matchSticksRemaining = 13, matchSticksTaken = 3, player = Player.HUMAN)
@@ -71,6 +72,23 @@ class UndoServiceSpec: DescribeSpec() {
                 actual shouldBeEqualTo expected
             }
         }
-    }
 
+        describe("A game with an uneven number of turns") {
+            val nimGame = NimGame(
+                turn = 2,
+                matchSticksRemaining = 10,
+                gameHistory = listOf(
+                    NimGameTurn(turn = 1, matchSticksRemaining = 13, matchSticksTaken = 3, player = Player.HUMAN)
+                )
+            )
+
+            it("will undo the single turn") {
+                val expected = NimGame.new().copy(id = nimGame.id)
+
+                val actual = undoService.undo(nimGame)
+
+                actual shouldBeEqualTo expected
+            }
+        }
+    }
 }

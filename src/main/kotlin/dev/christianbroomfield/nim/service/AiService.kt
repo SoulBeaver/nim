@@ -9,12 +9,12 @@ import kotlin.random.Random
 private val log = KotlinLogging.logger {}
 
 interface Ai {
-    fun computeOptimalTurnStrategy(nimGame: NimGame): NimGameTurnResult
+    fun computeOptimalTurnStrategy(nimGame: NimGame): PlayerTurnResult
 }
 
-class Skynet(private val random: Random = Random.Default): Ai {
+class Skynet(private val random: Random = Random.Default) : Ai {
     override fun computeOptimalTurnStrategy(nimGame: NimGame) =
-        NimGameTurnResult(Player.AI, determineMatchSticksToTake(nimGame.matchSticksRemaining))
+        PlayerTurnResult(Player.AI, determineMatchSticksToTake(nimGame.matchSticksRemaining))
 
     private fun determineMatchSticksToTake(matchSticksRemaining: Int) = when {
         // Doesn't really matter

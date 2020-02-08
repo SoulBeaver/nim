@@ -18,14 +18,14 @@ data class NimGameTurn(
             throw IllegalArgumentException("Attempted to write a negative turn value in the history; $turn")
         }
 
-        if (matchSticksRemaining !in 0..13) {
-            log.warn { "MatchSticksRemaining not in allowed range [0..13]; $matchSticksRemaining" }
-            throw IllegalArgumentException("MatchSticksRemaining not in allowed range [0..13]; $matchSticksRemaining")
+        if (matchSticksRemaining !in MIN_MATCHSTICKS..MAX_MATCHSTICKS) {
+            log.warn { "MatchSticksRemaining not in allowed range [$MIN_MATCHSTICKS..$MAX_MATCHSTICKS]; $matchSticksRemaining" }
+            throw IllegalArgumentException("MatchSticksRemaining not in allowed range [$MIN_MATCHSTICKS..$MAX_MATCHSTICKS]; $matchSticksRemaining")
         }
 
-        if (matchSticksTaken !in 1..3) {
-            log.warn { "MatchSticksTaken not in allowed range [1..3]; $matchSticksTaken" }
-            throw IllegalArgumentException("MatchSticksTaken not in allowed range [1..3]; $matchSticksTaken")
+        if (matchSticksTaken !in MIN_MATCHSTICKS_TO_TAKE..MAX_MATCHSTICKS_TO_TAKE) {
+            log.warn { "MatchSticksTaken not in allowed range [$MIN_MATCHSTICKS_TO_TAKE..$MAX_MATCHSTICKS_TO_TAKE]; $matchSticksTaken" }
+            throw IllegalArgumentException("MatchSticksTaken not in allowed range [$MIN_MATCHSTICKS_TO_TAKE..$MAX_MATCHSTICKS_TO_TAKE]; $matchSticksTaken")
         }
     }
 }

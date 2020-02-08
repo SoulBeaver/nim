@@ -10,6 +10,7 @@ import dev.christianbroomfield.nim.resource.GetCompleted
 import dev.christianbroomfield.nim.resource.Take
 import dev.christianbroomfield.nim.resource.Undo
 import dev.christianbroomfield.nim.resource.Update
+import dev.christianbroomfield.nim.service.NimGameService
 import dev.christianbroomfield.nim.service.NimGameTurnService
 import dev.christianbroomfield.nim.service.Skynet
 import dev.christianbroomfield.nim.service.UndoService
@@ -54,7 +55,7 @@ object NimServer {
         val updateHandler = Update(nimGameDao)
         val deleteHandler = Delete(nimGameDao)
 
-        val takeHandler = Take(nimGameDao, Skynet(), NimGameTurnService())
+        val takeHandler = Take(nimGameDao, NimGameService(NimGameTurnService(), Skynet()))
         val undoHandler = Undo(nimGameDao, UndoService())
 
         return assembleFilters().then(
