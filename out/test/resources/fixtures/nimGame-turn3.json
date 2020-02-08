@@ -1,0 +1,18 @@
+{
+  "turn": 3,
+  "match_sticks_remaining": 8,
+  "game_history": [
+    {
+      "turn": 2,
+      "match_sticks_remaining": 10,
+      "match_sticks_taken": 2,
+      "player": "AI"
+    },
+    {
+      "turn": 1,
+      "match_sticks_remaining": 13,
+      "match_sticks_taken": 3,
+      "player": "HUMAN"
+    }
+  ]
+}
