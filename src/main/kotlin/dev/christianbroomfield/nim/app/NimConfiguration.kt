@@ -5,6 +5,7 @@ package dev.christianbroomfield.nim.app
  * from environment variables or a yaml file.
  */
 data class NimConfiguration(
+    val debug: Boolean = true,
     val port: Int = 8080,
     val mongo: MongoConfiguration = MongoConfiguration()
 )

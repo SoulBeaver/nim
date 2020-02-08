@@ -61,7 +61,7 @@ object NimServer {
         val takeHandler = Take(nimGameDao, NimGameService(NimGameTurnService(), Skynet()))
         val undoHandler = Undo(nimGameDao, UndoService())
 
-        return assembleFilters().then(
+        return assembleFilters(configuration).then(
             routes(
                 "/healthcheck" bind Method.GET to { Response(OK).body("ping") },
 
@@ -80,12 +80,18 @@ object NimServer {
         )
     }
 
-    private fun assembleFilters(): Filter {
-        return DebuggingFilters
-            .PrintRequestAndResponse()
+    private fun assembleFilters(config: NimConfiguration): Filter {
+        val filter = when {
+            config.debug -> DebuggingFilters
+                .PrintRequestAndResponse()
+                .then(ServerFilters.CatchLensFailure)
+
+            else -> ServerFilters.CatchLensFailure
+        }
+
+        return filter
             .then(ResponseFilters.ReportHttpTransaction { tx: HttpTransaction ->
                 log.info { "${tx.request.uri} ${tx.response.status}; took ${tx.duration.toMillis()}ms" }
             })
-            .then(ServerFilters.CatchLensFailure)
     }
 }

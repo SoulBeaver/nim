@@ -26,7 +26,8 @@ private val log = KotlinLogging.logger {}
  *
  * You might disagree with my decision to keep the DAO on the top level. A frequent argument I hear is that you should
  * keep business and database logic separate from the REST layer. And while yes generally I'd agree, it's a lot easier
- * to test if the business logic is separate from the database logic.
+ * to test if the business logic is separate from the database logic. Generally, the logic herre is simple enough that we don't
+ * have to worry about a database layer. For anything more complex than inserts and updates, this code really shouldn't be here.
  */
 object Take {
     operator fun invoke(dao: NimGameDao, nimGameService: NimGameService): RoutingHttpHandler {
@@ -48,6 +49,12 @@ object Take {
                     else -> {
                         // Ensure that we only update once for both game turns to prevent a player
                         // from inputting their turn between game turns
+
+                        // MongoDB doesn't fail concurrent updates. Instead, an update is given a queue and it waits its
+                        // turn until it's allowed to perform the execution. This means that the last update "wins". Practically,
+                        // calling /take multiple times on the same turn means that it is in an undefined state where either
+                        // a take1, take2 or take3 may win as the last update. This could be annoying... but the turn-based
+                        // nature of the game and the undo safety net means that any accidental overwrite can be easily fixed.
                         dao.update(updateGameResult.updatedGame!!.id.toString(), updateGameResult.updatedGame)
                         Response(Status.OK).with(nimGameMsgLens of updateGameResult.updatedGame.toMessage())
                     }

@@ -34,8 +34,6 @@ object Undo {
             val undoneGame = dao.get(id)?.let {
                 undoService.undo(it)
             }?.also {
-                // Dev note:  this is just some opinionated stuff, but I like it when the side effect
-                // is clearly separated from the rest of the code.
                 dao.update(id, it)
             }
 

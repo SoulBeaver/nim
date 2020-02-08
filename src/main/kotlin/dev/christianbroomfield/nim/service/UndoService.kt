@@ -28,12 +28,22 @@ class UndoService {
         nimGame.gameHistory.isEmpty() ->
             nimGame // trying to undo a first turn is not exceptional, just return the object as-is
 
+        /*
+         * An odd state is usually reached after a losing move by the player or from
+         * an update call that puts the game in an uncommon state. Either way, remove one action, either the
+         * Human's losing play or put the history back into an even list.
+         */
         nimGame.gameHistory.size.isOdd() -> {
             undoOnce(nimGame).also {
                 log.debug { "Reverted from $nimGame to $it" }
             }
         }
 
+        /*
+         * An even state is whenever a Human and AI take their two turns. Therefore, unless someone has
+         * mucked around with the update call, undoing two operation will undo the AI's last action and the Human's
+         * action.
+         */
         else -> {
             undoOnce(undoOnce(nimGame)).also {
                 log.debug { "Reverted from $nimGame to $it" }
@@ -53,7 +63,4 @@ class UndoService {
     }
 }
 
-private fun <T> List<T>.second() = this.drop(1).first()
-
 private fun Int.isOdd() = this % 2 == 1
-private fun Int.isEven() = !this.isOdd()
