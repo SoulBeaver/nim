@@ -1,6 +1,6 @@
 # Nim
 
-[![CircleCI](https://circleci.com/gh/SoulBeaver/nim.svg?style=svg)](https://circleci.com/gh/SoulBeaver/nim) [![codecov](https://codecov.io/gh/SoulBeaver/nim/branch/master/graph/badge.svg?token=tQkCabXP3F)](https://codecov.io/gh/SoulBeaver/nim)
+[![CircleCI](https://circleci.com/gh/SoulBeaver/nim/tree/master.svg?style=svg&circle-token=535d37aa3d458adc065fef0e927b61a3063150b5)](https://circleci.com/gh/SoulBeaver/nim/tree/master) [![codecov](https://codecov.io/gh/SoulBeaver/nim/branch/master/graph/badge.svg?token=tQkCabXP3F)](https://codecov.io/gh/SoulBeaver/nim)
 
 ## Das Spiel
 
