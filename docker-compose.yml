@@ -1,7 +1,18 @@
-version: '3'
+version: '3.1'
 services:
-  web:
-    build: .
-    image: christianbroomfield/nim
+  mongodb:
+    image: mongo:latest
+    restart: always
+    volumes:
+      - ./nim/db:/data/db
     ports:
-      - "80:9000"
+      - "27017:27017"
+
+  nim:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - MONGODB_URL=mongodb://mongodb:27017
+    depends_on:
+      - mongodb

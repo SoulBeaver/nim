@@ -37,7 +37,7 @@ object NimServer {
     operator fun invoke(configuration: NimConfiguration): HttpHandler {
         Jackson.mapper.registerModule(IdJacksonModule())
 
-        val nimGameDao = NimGameDao(KMongo.createClient(configuration.mongo.host, configuration.mongo.port))
+        val nimGameDao = NimGameDao(KMongo.createClient(configuration.mongo.uri))
 
         /**
          * Dev note:  the way of doing things in Http4k is to keep every handler, a type of closure,

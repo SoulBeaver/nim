@@ -1,5 +1,6 @@
 package dev.christianbroomfield.nim.integration.server
 
+import com.mongodb.MongoClientURI
 import dev.christianbroomfield.nim.app.MongoConfiguration
 import dev.christianbroomfield.nim.app.NimConfiguration
 import dev.christianbroomfield.nim.app.NimServer
@@ -31,7 +32,7 @@ import org.http4k.core.Body.Companion as Body1
 class ServerIntegrationTest : DescribeSpec() {
     private val embeddedMongod = EmbeddedMongoDB()
 
-    private val nimServer = NimServer(NimConfiguration(mongo = MongoConfiguration("localhost", 12345)))
+    private val nimServer = NimServer(NimConfiguration(mongo = MongoConfiguration(MongoClientURI("mongodb://localhost:12345"))))
 
     override fun listeners(): List<TestListener> {
         return listOf(embeddedMongod)

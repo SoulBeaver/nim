@@ -30,14 +30,16 @@ Alle Endpunkte können auch in der Datei `requests.http` mit einem lokal laufend
 |PUT|/nim/:id|Set the Nim game to a different state
 |DELETE|/nim/:id|Delete the Nim game for the given id if it exists
 
-## Tech Stack
+## Tech Stack und Setup
 
 - Kotlin
 - Http4k
 - MongoDB
 
-Ihr braucht eine aktive MongoDB Instanz, um das Program laufen zu lassen. Port und Host können in der
-NimConfiguration angepasst werden. 
+Das Projekt kann mit `docker-compose` gebaut und gestartet werden und ist dann mit Port 8080 erreichbar.
+
+Alternativ braucht ihr eine laufende MongoDB Instanz auf Port 27017, oder ihr überschreibt die environment Variable `MONGODB_URL`
+wie in der docker-compose.yml.  
 
 ## Developer Thoughts
 

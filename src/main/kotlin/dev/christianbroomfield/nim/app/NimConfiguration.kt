@@ -1,5 +1,7 @@
 package dev.christianbroomfield.nim.app
 
+import com.mongodb.MongoClientURI
+
 /*
  * Dev note:  ideally we'd be using distributed configuration like Spring Cloud Config or even just reading
  * from environment variables or a yaml file.
@@ -11,6 +13,5 @@ data class NimConfiguration(
 )
 
 data class MongoConfiguration(
-    val host: String = "127.0.0.1",
-    val port: Int = 27017
+    val uri: MongoClientURI = MongoClientURI(System.getenv("MONGODB_URL") ?: "mongodb://localhost:27017")
 )
